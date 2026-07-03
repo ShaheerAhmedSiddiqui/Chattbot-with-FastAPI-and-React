@@ -5,7 +5,7 @@ from datetime import datetime
 # Schema for incoming data when registering a new user
 class UserCreate(BaseModel):
     email: EmailStr
-    username: str = Field(..., min_length=3, max_length=50)
+    name: str = Field(..., min_length=3, max_length=50)
     password: str = Field(..., min_length=6, description="Password must be at least 6 characters long")
 
 # Schema for incoming data when logging in
@@ -17,9 +17,7 @@ class UserLogin(BaseModel):
 class UserResponse(BaseModel):
     id: int
     email: EmailStr
-    username: str
-    is_active: bool
-    created_at: datetime
+    name: str
 
     class Config:
         from_attributes = True  
