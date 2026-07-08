@@ -40,4 +40,11 @@ app.add_middleware(
 def greet():
     return "hello from store"
 
+@app.get("/debug")
+def debug():
+    return {
+        "frontend_url": os.getenv("FRONTEND_URL"),
+        "origins": origins
+    }
+
 app.include_router(api_router, prefix="/api/v1")
