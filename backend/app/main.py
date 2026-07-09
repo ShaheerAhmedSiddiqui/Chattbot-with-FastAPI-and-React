@@ -16,8 +16,7 @@ database_model.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Enterprise Chatbot API")
 
-FRONTEND_URL = os.getenv("FRONTEND_URL")
-
+FRONTEND_URL = os.getenv("FRONTEND_URL", "").replace("FRONTEND_URL=", "").rstrip("/")
 origins = [
     "http://localhost:3000",
     "http://localhost:5173",
