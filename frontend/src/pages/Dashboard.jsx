@@ -200,10 +200,10 @@ export default function Dashboard() {
         <div className="flex h-16 items-center justify-between border-t border-slate-900 bg-slate-950/40 px-5 text-xs">
           <div className="flex items-center gap-2 min-w-0">
             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-800 border border-slate-700 uppercase font-bold text-indigo-400">
-              {user?.username?.charAt(0) || 'U'}
+              {user?.name?.charAt(0) || 'U'}
             </div>
             <div className="min-w-0">
-              <p className="font-semibold text-slate-300 truncate">{user?.username}</p>
+              <p className="font-semibold text-slate-300 truncate">{user?.name}</p>
             </div>
           </div>
           <button onClick={logout} className="p-2 text-slate-500 hover:text-rose-400 rounded-lg hover:bg-slate-900/50">
