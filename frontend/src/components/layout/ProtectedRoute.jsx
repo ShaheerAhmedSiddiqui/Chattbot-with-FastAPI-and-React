@@ -13,7 +13,6 @@ export default function ProtectedRoute({ children }) {
   }
 
   if (!user) {
-    // Kick unauthenticated traffic back to login securely
     return <Navigate to="/login" replace />;
   }
 

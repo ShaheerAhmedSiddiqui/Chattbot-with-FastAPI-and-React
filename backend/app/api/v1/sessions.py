@@ -19,9 +19,9 @@ def read_sessions(db: Session = Depends(get_db), current_user: User = Depends(ge
     
     return crud_session.get_user_sessions(db, user_id=current_user.id)
 
+
 @router.delete("/{session_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_chat_session(session_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
-    # Query with BOTH session ID and user ID checking constraints
     session = db.query(Sessions).filter(Sessions.id == session_id, Sessions.user_id == current_user.id).first()
     
     if not session:
