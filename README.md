@@ -254,9 +254,17 @@ git push origin feature/your-feature-name
 
 ---
 
-## 📄 License
+## 👤 Author
 
-This project is licensed under the MIT License — see [`LICENSE`](LICENSE) for details.
+**Shaheer Ahmed Siddiqui**
+BS Software Engineering
+—Sukkur IBA University
+
+📧 Email: mrshaheer75@gmail.com
+
+🔗 LinkedIn: https://www.linkedin.com/in/shaheer-ahmed-siddiqui-b381a1248/
+
+💻 GitHub: https://github.com/ShaheerAhmedSiddiqui/
 
 ---
 
