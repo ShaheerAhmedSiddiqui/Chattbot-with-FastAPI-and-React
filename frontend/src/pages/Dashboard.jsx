@@ -213,7 +213,7 @@ export default function Dashboard() {
               <Menu className="h-5 w-5" />
             </button>
             <h1 className="text-sm font-semibold text-gray-200 flex items-center gap-1.5">
-              ChatGPT <span className="text-xs text-gray-400 font-normal">3.5</span>
+              FastAI <span className="text-xs text-gray-400 font-normal">2.0</span>
             </h1>
           </div>
         </header>
