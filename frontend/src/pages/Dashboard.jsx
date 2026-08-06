@@ -2,8 +2,8 @@ import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 import API from '../services/client';
 import { 
-  MessageSquareCode, Plus, LogOut, Send, 
-  Bot, User, MessageSquare, Loader2, Trash2, Menu, X
+  Plus, LogOut, ArrowUp, 
+  Sparkles, Loader2, Trash2, Menu, X, MessageSquare
 } from 'lucide-react';
 
 export default function Dashboard() {
@@ -16,9 +16,7 @@ export default function Dashboard() {
   const [isMessagesLoading, setIsMessagesLoading] = useState(false);
   const [isSending, setIsSending] = useState(false);
   
-  // Mobile Sidebar Toggle State
   const [isMobileOpen, setIsMobileOpen] = useState(false);
-  
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -67,11 +65,11 @@ export default function Dashboard() {
 
   const handleCreateSession = async () => {
     try {
-      const title = `Chat session #${sessions.length + 1}`;
+      const title = `New chat`;
       const response = await API.post('/sessions/', { title });
       setSessions([response.data, ...sessions]);
       setCurrentSessionId(response.data.id);
-      setIsMobileOpen(false); // Close menu on mobile after picking
+      setIsMobileOpen(false);
     } catch (err) {
       console.error("Failed to initialize session:", err);
     }
@@ -122,72 +120,64 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-slate-950 font-sans text-slate-100 relative">
+    <div className="flex h-screen w-screen overflow-hidden bg-[#212121] font-sans text-token-text-primary text-gray-100">
       
       {/* Mobile Backdrop Overlay */}
       {isMobileOpen && (
         <div 
-          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden"
+          className="fixed inset-0 bg-black/50 z-40 md:hidden"
           onClick={() => setIsMobileOpen(false)}
         />
       )}
 
-      {/* ================= SIDEBAR (WITH MOBILE SLIDE TRANSITIONS) ================= */}
-      <aside className={`fixed md:sticky inset-y-0 left-0 z-50 flex h-full w-80 flex-col border-r border-slate-900 bg-slate-900 md:bg-slate-900/40 backdrop-blur-sm transform transition-transform duration-300 md:transform-none ${
+      {/* SIDEBAR */}
+      <aside className={`fixed md:sticky inset-y-0 left-0 z-50 flex h-full w-[260px] flex-col bg-[#171717] transform transition-transform duration-200 md:transform-none ${
         isMobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
       }`}>
-        {/* Brand Header */}
-        <div className="flex h-16 items-center justify-between px-6 border-b border-slate-900">
-          <div className="flex items-center gap-2.5">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-tr from-indigo-600 to-violet-500 shadow-md">
-              <MessageSquareCode className="h-4 w-4 text-white" />
-            </div>
-            <span className="font-semibold text-sm tracking-wide text-slate-200">NexusAI Dashboard</span>
-          </div>
-          {/* Close button inside mobile menu */}
-          <button onClick={() => setIsMobileOpen(false)} className="md:hidden p-1 text-slate-400 hover:text-slate-200">
+        
+        {/* Sidebar Header / New Chat */}
+        <div className="flex items-center justify-between p-3">
+          <button 
+            onClick={handleCreateSession}
+            className="flex flex-1 items-center justify-between gap-2 rounded-lg border border-white/10 px-3 py-2 text-sm text-white hover:bg-[#212121] transition"
+          >
+            <span className="flex items-center gap-2">
+              <Plus className="h-4 w-4" />
+              New chat
+            </span>
+          </button>
+          <button onClick={() => setIsMobileOpen(false)} className="md:hidden ml-2 p-2 text-gray-400 hover:text-white">
             <X className="h-5 w-5" />
           </button>
         </div>
 
-        {/* Action Control: New Thread */}
-        <div className="p-4">
-          <button 
-            onClick={handleCreateSession}
-            className="flex w-full items-center justify-center gap-2 rounded-xl bg-slate-950 border border-slate-800/60 hover:border-slate-700/80 py-2.5 text-xs font-medium tracking-wide transition hover:bg-slate-800/40"
-          >
-            <Plus className="h-4 w-4 text-indigo-400" />
-            New Conversation
-          </button>
-        </div>
-
         {/* Dynamic Context History List */}
-        <div className="flex-1 overflow-y-auto px-3 py-2 space-y-1 scrollbar-thin">
+        <div className="flex-1 overflow-y-auto px-2 py-1 space-y-1">
           {isSessionsLoading ? (
-            <div className="flex h-32 items-center justify-center"><Loader2 className="h-5 w-5 animate-spin text-slate-600" /></div>
+            <div className="flex h-20 items-center justify-center"><Loader2 className="h-4 w-4 animate-spin text-gray-500" /></div>
           ) : sessions.length === 0 ? (
-            <p className="text-center text-xs text-slate-600 pt-8 font-mono">No active threads logged.</p>
+            <p className="px-3 py-2 text-xs text-gray-500">No chat history.</p>
           ) : (
             sessions.map((session) => (
               <div
                 key={session.id}
                 onClick={() => {
                   setCurrentSessionId(session.id);
-                  setIsMobileOpen(false); // Auto-hide menu on click
+                  setIsMobileOpen(false);
                 }}
-                className={`group flex items-center justify-between gap-3 rounded-xl px-4 py-3 text-xs font-medium cursor-pointer transition duration-150 ${
+                className={`group flex items-center justify-between gap-2 rounded-lg px-3 py-2.5 text-sm cursor-pointer transition ${
                   currentSessionId === session.id 
-                    ? 'bg-gradient-to-r from-indigo-950/40 to-slate-900 border-l-2 border-indigo-500 text-slate-200' 
-                    : 'text-slate-400 hover:bg-slate-900/50 hover:text-slate-200'
+                    ? 'bg-[#212121] text-white' 
+                    : 'text-gray-300 hover:bg-[#212121]/60'
                 }`}
               >
-                <div className="flex items-center gap-2.5 min-w-0">
-                  <MessageSquare className={`h-4 w-4 flex-shrink-0 ${currentSessionId === session.id ? 'text-indigo-400' : 'text-slate-600'}`} />
-                  <span className="truncate">{session.title}</span>
+                <div className="flex items-center gap-2 min-w-0">
+                  <MessageSquare className="h-4 w-4 flex-shrink-0 text-gray-400" />
+                  <span className="truncate text-xs font-normal">{session.title}</span>
                 </div>
                 <button 
                   onClick={(e) => handleDeleteSession(e, session.id)}
-                  className="opacity-0 group-hover:opacity-100 md:opacity-100 p-1 text-slate-600 hover:text-rose-400 rounded transition"
+                  className="opacity-0 group-hover:opacity-100 p-1 text-gray-400 hover:text-white transition"
                 >
                   <Trash2 className="h-3.5 w-3.5" />
                 </button>
@@ -197,112 +187,116 @@ export default function Dashboard() {
         </div>
 
         {/* User Profile Footer */}
-        <div className="flex h-16 items-center justify-between border-t border-slate-900 bg-slate-950/40 px-5 text-xs">
-          <div className="flex items-center gap-2 min-w-0">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-800 border border-slate-700 uppercase font-bold text-indigo-400">
+        <div className="border-t border-white/10 p-3 flex items-center justify-between text-sm">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-600 font-semibold text-white text-xs">
               {user?.name?.charAt(0) || 'U'}
             </div>
-            <div className="min-w-0">
-              <p className="font-semibold text-slate-300 truncate">{user?.name}</p>
-            </div>
+            <span className="font-medium text-xs text-gray-200 truncate">{user?.name || 'User'}</span>
           </div>
-          <button onClick={logout} className="p-2 text-slate-500 hover:text-rose-400 rounded-lg hover:bg-slate-900/50">
+          <button onClick={logout} className="p-1.5 text-gray-400 hover:text-white rounded-md hover:bg-[#212121]">
             <LogOut className="h-4 w-4" />
           </button>
         </div>
       </aside>
 
-      {/* ================= MAIN CHAT MODULE VIEW ================= */}
-      <main className="flex h-full flex-1 flex-col bg-slate-950 overflow-hidden">
+      {/* MAIN CHAT AREA */}
+      <main className="flex h-full flex-1 flex-col bg-[#212121] relative overflow-hidden">
         
-        {/* Dynamic Top Workspace Navbar Header */}
-        <header className="flex h-16 items-center justify-between md:justify-start px-6 border-b border-slate-900 bg-slate-950/40 backdrop-blur-md z-10">
-          {/* Mobile Menu Action Toggle Button */}
-          <button 
-            onClick={() => setIsMobileOpen(true)}
-            className="md:hidden p-2 -ml-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 active:scale-95"
-          >
-            <Menu className="h-4 w-4" />
-          </button>
-
-          <div className="flex flex-col md:ml-2 text-right md:text-left">
-            <h3 className="text-xs font-semibold text-slate-200">
-              {sessions.find(s => s.id === currentSessionId)?.title || "Select or Build a Thread Workspace"}
-            </h3>
+        {/* Top Minimal Navbar */}
+        <header className="flex h-14 items-center justify-between px-4 border-b border-white/5 bg-[#212121]">
+          <div className="flex items-center gap-2">
+            <button 
+              onClick={() => setIsMobileOpen(true)}
+              className="md:hidden p-1.5 rounded-lg text-gray-400 hover:bg-[#2f2f2f]"
+            >
+              <Menu className="h-5 w-5" />
+            </button>
+            <h1 className="text-sm font-semibold text-gray-200 flex items-center gap-1.5">
+              ChatGPT <span className="text-xs text-gray-400 font-normal">3.5</span>
+            </h1>
           </div>
         </header>
 
-        {/* Conversation Core Timeline Stream */}
-        <div className="flex-1 overflow-y-auto px-4 md:px-8 py-6 space-y-6 scrollbar-thin">
+        {/* Conversation Stream */}
+        <div className="flex-1 overflow-y-auto px-4 md:px-0 scrollbar-thin">
           {currentSessionId ? (
-            <>
+            <div className="max-w-3xl mx-auto py-6 space-y-6">
               {isMessagesLoading ? (
-                <div className="flex h-full items-center justify-center"><Loader2 className="h-6 w-6 animate-spin text-indigo-500" /></div>
+                <div className="flex h-32 items-center justify-center"><Loader2 className="h-5 w-5 animate-spin text-gray-500" /></div>
               ) : (
                 messages.map((msg) => (
                   <div 
                     key={msg.id} 
-                    className={`flex gap-3 md:gap-4 max-w-3xl xl:max-w-4xl mx-auto ${msg.sender.toUpperCase() === 'USER' ? 'justify-end' : 'justify-start'}`}
+                    className={`flex gap-4 text-sm md:text-base leading-7 ${
+                      msg.sender.toUpperCase() === 'USER' ? 'justify-end' : 'justify-start'
+                    }`}
                   >
-                    {msg.sender.toUpperCase() !== 'USER' && (
-                      <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-xl bg-slate-900 border border-slate-800 text-indigo-400">
-                        <Bot className="h-4 w-4" />
+                    {msg.sender.toUpperCase() === 'USER' ? (
+                      <div className="bg-[#2f2f2f] text-gray-100 rounded-3xl px-5 py-2.5 max-w-[80%]">
+                        {msg.content}
+                      </div>
+                    ) : (
+                      <div className="flex gap-4 w-full">
+                        <div className="h-7 w-7 rounded-full border border-white/10 bg-[#212121] flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <Sparkles className="h-4 w-4 text-emerald-500" />
+                        </div>
+                        <div className="flex-1 text-gray-200 whitespace-pre-wrap pt-0.5">
+                          {msg.content}
+                        </div>
                       </div>
                     )}
-                    <div className={`rounded-2xl px-4 py-2.5 text-xs md:text-sm leading-relaxed max-w-[85%] ${
-                      msg.sender.toUpperCase() === 'USER' 
-                        ? 'bg-indigo-600 text-white rounded-br-none' 
-                        : 'bg-slate-900/80 text-slate-300 border border-slate-800/80 rounded-bl-none whitespace-pre-wrap'
-                    }`}>
-                      {msg.content}
-                    </div>
                   </div>
                 ))
               )}
               
               {isSending && (
-                <div className="flex gap-4 max-w-3xl mx-auto items-center justify-start animate-pulse">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-900 border border-slate-800 text-indigo-400">
-                    <Bot className="h-4 w-4 animate-spin" />
+                <div className="flex gap-4 w-full text-sm">
+                  <div className="h-7 w-7 rounded-full border border-white/10 bg-[#212121] flex items-center justify-center flex-shrink-0">
+                    <Sparkles className="h-4 w-4 text-emerald-500 animate-spin" />
                   </div>
-                  <div className="rounded-2xl px-4 py-2 text-xs text-slate-500 bg-slate-900/40 border border-slate-800/40 rounded-bl-none font-mono">
-                    Thinking...
-                  </div>
+                  <div className="text-gray-400 pt-1">Thinking...</div>
                 </div>
               )}
               <div ref={messagesEndRef} />
-            </>
+            </div>
           ) : (
             <div className="flex h-full flex-col items-center justify-center text-center p-6">
-              <MessageSquare className="h-10 w-10 text-slate-800 mb-4 stroke-[1.5]" />
-              <h4 className="text-sm font-medium text-slate-400">No Thread Active</h4>
-              <p className="text-xs text-slate-600 max-w-xs mt-1">Select an existing thread from the sidebar list or spin up a new instance context.</p>
-              <button onClick={handleCreateSession} className="md:hidden mt-4 rounded-xl bg-indigo-600 px-4 py-2 text-xs font-semibold text-white">
-                Create Session
-              </button>
+              <div className="h-12 w-12 rounded-full border border-white/10 flex items-center justify-center mb-4 bg-[#2f2f2f]">
+                <Sparkles className="h-6 w-6 text-white" />
+              </div>
+              <h2 className="text-xl font-medium text-white">What can I help with today?</h2>
             </div>
           )}
         </div>
 
-        {/* Conversational Input Frame Box Area */}
+        {/* Floating Input Pill */}
         {currentSessionId && (
-          <footer className="p-4 md:p-6 bg-gradient-to-t from-slate-950 via-slate-950 to-transparent">
-            <form onSubmit={handleSendMessage} className="max-w-3xl xl:max-w-4xl mx-auto relative">
-              <input
-                type="text"
-                value={inputMessage}
-                onChange={(e) => setInputMessage(e.target.value)}
-                disabled={isSending}
-                placeholder="Ask something technical..."
-                className="w-full rounded-2xl border border-slate-800 bg-slate-900/40 py-3.5 pl-4 pr-12 text-xs md:text-sm text-slate-200 placeholder-slate-600 outline-none focus:border-indigo-500"
-              />
-              <button
-                type="submit"
-                disabled={!inputMessage.trim() || isSending}
-                className="absolute right-2 top-1/2 -translate-y-1/2 flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-600 text-white disabled:bg-slate-800 disabled:text-slate-600"
-              >
-                <Send className="h-4 w-4" />
-              </button>
+          <footer className="p-4 bg-[#212121]">
+            <form onSubmit={handleSendMessage} className="max-w-3xl mx-auto relative">
+              <div className="relative flex items-center bg-[#2f2f2f] rounded-3xl border border-white/5 focus-within:border-white/20">
+                <textarea
+                  rows={1}
+                  value={inputMessage}
+                  onChange={(e) => setInputMessage(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                      e.preventDefault();
+                      handleSendMessage(e);
+                    }
+                  }}
+                  disabled={isSending}
+                  placeholder="Message ChatGPT..."
+                  className="w-full bg-transparent py-3.5 pl-5 pr-12 text-sm md:text-base text-gray-100 placeholder-gray-400 outline-none resize-none max-h-36 overflow-y-auto"
+                />
+                <button
+                  type="submit"
+                  disabled={!inputMessage.trim() || isSending}
+                  className="absolute right-2.5 flex h-8 w-8 items-center justify-center rounded-full bg-white text-black disabled:bg-[#676767] disabled:text-[#212121] transition"
+                >
+                  <ArrowUp className="h-4 w-4 stroke-[3]" />
+                </button>
+              </div>
             </form>
           </footer>
         )}
