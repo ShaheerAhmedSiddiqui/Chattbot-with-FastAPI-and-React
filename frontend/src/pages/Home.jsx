@@ -9,7 +9,7 @@ export default function Home() {
       <nav className="flex h-16 w-full items-center justify-between px-6 md:px-12 border-b border-white/10 bg-[#171717]">
         <div className="flex items-center gap-2">
           <Sparkles className="h-5 w-5 text-emerald-500" />
-          <span className="font-semibold text-sm tracking-wide text-white">ChatGPT App</span>
+          <span className="font-semibold text-sm tracking-wide text-white">FastAI ChattApp</span>
         </div>
 
         <div className="flex items-center gap-4 text-xs font-medium">
